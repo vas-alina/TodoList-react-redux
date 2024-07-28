@@ -1,40 +1,26 @@
-import { useEffect, useState } from "react";
-import styles from './ToDo-list-two.module.css';
-import { UseAddDeleteChangeTodos } from "../../hooks/useAddDeleteChangeTodos";
-import UseGetTodos from "../../hooks/useGetTodos";
-import { UseSortAndSearchTodos } from "../../hooks/useSortAndSearchTodos"; 
+import styles from '../styles/TodoList.module.css';
 import { TiSortAlphabeticallyOutline, TiSortNumericallyOutline, TiTick, TiPencil, TiTrash, TiTickOutline } from "react-icons/ti";
 import { IoSearch } from "react-icons/io5";
-export const Todo = () => {
-    const [todo, setTodo] = useState('');
+
+export const TodoListLayout = (
+    {todo, 
+    isLoading, 
+    handleAdd, 
+    error, 
+    search, 
+    handleSearchChange, 
+    toggleSortMode, 
+    isSorted, 
+    displayedTodos, 
+    editingTodoId, 
+    localTitle, 
+    handleTitleChange, 
+    handleSave, 
+    toggleEdit, 
+    handleDelete, 
+    setTodo
+    }) => {
     
-    const { todos, fetchTodos, isLoading, error } = UseGetTodos();
-    const { addTodo, 
-        deleteTodo, 
-        changeTodo, 
-        updateChangeTodos, 
-        updateDeleteTodos, 
-        updateAddTodos } = UseAddDeleteChangeTodos();
-    const { isSorted, 
-        search, 
-        handleSearchChange, 
-        displayedTodos, 
-        toggleSortMode, 
-        toggleEdit, 
-        handleDelete, 
-        handleTitleChange, 
-        handleSave, 
-        editingTodoId } = UseSortAndSearchTodos(todos, deleteTodo, changeTodo);
-    
-    useEffect(() => {
-        fetchTodos();
-    }, [updateChangeTodos, updateDeleteTodos, updateAddTodos, fetchTodos]);
-    
-    const handleAdd = () => {
-        const newTodo = { title: todo, text: todo }; 
-        addTodo(newTodo); 
-        setTodo(""); 
-    };
    
       return (
         <div className={styles.mainContainer}>
@@ -55,16 +41,18 @@ export const Todo = () => {
                 {isLoading && <p>Загрузка...</p>}
                 {error && <p className={styles.error}>Ошибка: {error}</p>}
             </div>
+
             <div className={styles.searchAndSortTodo}>
-            <IoSearch className={styles.icon}/>
-            <input 
-            
-                type="text" 
-                value={search} 
-                onChange={handleSearchChange} 
-                placeholder="Поиск по задачам"/>
-             <button onClick={toggleSortMode}>
-                {isSorted ? <TiSortNumericallyOutline className={styles.icon}/> : <TiSortAlphabeticallyOutline className={styles.icon} />}
+                <IoSearch className={styles.icon}/>
+                <input 
+                    type="text" 
+                    value={search} 
+                    onChange={handleSearchChange} 
+                    placeholder="Поиск по задачам"/>
+                <button onClick={toggleSortMode}>
+                {isSorted ? <TiSortNumericallyOutline className={styles.icon}/> 
+                : 
+                <TiSortAlphabeticallyOutline className={styles.icon} />}
                 </button>
             </div>
             <div className={styles.todosContainer}>
@@ -75,7 +63,7 @@ export const Todo = () => {
                                 <>
                                     <input 
                                         className={styles.toggleInput}
-                                        value={todo.localTitle}
+                                        value={localTitle}
                                         onChange={(e) => handleTitleChange(e, todo.id)}
                                         placeholder="Новый текст для задачи"
                                     />
@@ -86,17 +74,13 @@ export const Todo = () => {
                             ) : (
                                 <>
                                     <span className={styles.todoText}>{todo.title}</span>
-                                    <button onClick={
-                                        () => {
-                                
-                                            toggleEdit(todo.id)}}><TiPencil className={styles.icon}/></button>
+                                    <button onClick={() => {toggleEdit(todo.id)}}><TiPencil className={styles.icon}/></button>
                                     <button onClick={() => handleDelete(todo.id)}><TiTrash className={styles.icon}/></button>
                                 </>
                             )}
                         </div>
                     ))}
                 </div>
-            
             </div>
         </div>
     );
