@@ -35,7 +35,7 @@ const todoReducer = (state = initialState, action) => {
     case ADD_TODO:
       return {
         ...state,
-        todos: action.payload,
+        todos: [...state.todos, action.payload],
       };
     case DELETE_TODO:
       return {

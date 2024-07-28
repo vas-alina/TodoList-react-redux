@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { deleteTodo } from "../actions/delete-todo";
 import { changeTodo } from "../actions/change-todo";
 
-export const useSortAndSearchTodos = (todos) => {
+export const useSortAndSearchTodos = (todos = []) => {
   const dispatch = useDispatch();
   const [isSorted, setIsSorted] = useState(false);
   const [search, setNewSearch] = useState("");
